@@ -7,11 +7,13 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import axios from "axios";
 import { Link2, Calendar, Globe, Edit, Save, X } from "lucide-react";
-import { Chart } from "react-google-charts";
+
 
 import { useParams } from "react-router-dom";
+import Maps from "./Maps";
+import axiosInstance from "../utils/axiosInstance";
+import MapLocations from "./MapLocations";
 
 const URLDetailPage = () => {
   const [urlData, setUrlData] = useState(null);
@@ -20,13 +22,14 @@ const URLDetailPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
   const { id } = useParams();
 
   useEffect(() => {
     const fetchURLData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/url/${id}`,
+        const response = await axiosInstance.get(
+          `/url/${id}`,
           { withCredentials: true }
         );
         console.log(response.data.data);
@@ -44,14 +47,13 @@ const URLDetailPage = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
   const handleSave = async () => {
+    
     if (urlData) {
       try {
-        const response = await axios.put(
-          `http://localhost:3000/api/url/${urlData._id}`,
-          { longUrl: editedUrl },
-          { headers: { "Content-Type": "application/json" } }
+        const response = await axiosInstance.put(
+          `/url/${urlData._id}`,
+          { longUrl: editedUrl }
         );
-
         setUrlData(response.data);
         setIsEditing(false);
       } catch (error) {
@@ -83,21 +85,18 @@ const URLDetailPage = () => {
       }))
     : [];
 
-
-
-
   // console.log(deviceData);
-
-  
-
-
 
   const countryData = [
     ["Country", "Popularity"],
-    ...Object.entries(urlData.country)
+    ...Object.entries(urlData.country),
   ];
 
+
+
+
   return (
+
     <div className="container mx-auto p-4 bg-gray-50 min-h-screen">
       <div className="bg-white shadow-lg rounded-xl overflow-hidden max-w-6xl mx-auto">
         {/* Header */}
@@ -198,40 +197,20 @@ const URLDetailPage = () => {
         <div className="p-6 grid md:grid-cols-2 gap-4">
           <div className="bg-white shadow rounded-lg p-4">
             <h3 className="text-center font-semibold mb-4">Access Locations</h3>
+            <MapLocations AccessLocations={urlData.locations} />
             {/* ACCESS LOCATIONS */}
-            
           </div>
-
-
-
           {/* Country Distribution Map */}
-          <div className="bg-white shadow rounded-lg p-4 w-full">
-            <h3 className="text-center font-semibold mb-4">
-              Country Distribution
-            </h3>
-
-            {/* COUNTRY MAPS */}
-            <Chart
-              chartEvents={[
-                {
-                  eventName: "select",
-                  callback: ({ chartWrapper }) => {
-                    const chart = chartWrapper.getChart();
-                    const selection = chart.getSelection();
-                    if (selection.length === 0) return;
-                    const region = countryData[selection[0].row + 1];
-                    console.log("Selected : " + region);
-                  },
-                },
-              ]}
-              chartType="GeoChart"
-              data={countryData}
-            />
-          </div>
+          <Maps countryData={countryData}/>
         </div>
       </div>
     </div>
   );
 };
+
+
+
+
+
 
 export default URLDetailPage;

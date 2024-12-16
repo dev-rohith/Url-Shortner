@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { Copy, Link } from "lucide-react";
+import axiosInstance from "../utils/axiosInstance";
 
 const UrlShortenerLanding = () => {
   const [longUrl, setLongUrl] = useState("");
@@ -11,24 +11,22 @@ const UrlShortenerLanding = () => {
 
   const validateUrl = (url) => {
     const urlPattern = new RegExp(
-      "^(https?:\\/\\/)?" + 
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + 
-        "((\\d{1,3}\\.){3}\\d{1,3}))" + 
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + 
-        "(\\?[;&a-z\\d%_.~+=-]*)?" + 
+      "^(https?:\\/\\/)?" +
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" +
+        "((\\d{1,3}\\.){3}\\d{1,3}))" +
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" +
+        "(\\?[;&a-z\\d%_.~+=-]*)?" +
         "(\\#[-a-z\\d_]*)?$",
-      "i" 
+      "i"
     );
     return !!urlPattern.test(url);
   };
 
   const handleCreateShortUrl = async () => {
-    
     setShortUrl("");
     setError("");
     setCopied(false);
 
-    
     if (!longUrl) {
       setError("Please enter a URL");
       return;
@@ -41,14 +39,15 @@ const UrlShortenerLanding = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post("http://localhost:3000/api/short", {
+      const response = await axiosInstance.post("/short", {
         longUrl: longUrl,
       });
 
-     
       const generatedShortUrl = response.data.data.sortUrl;
-      setShortUrl(`http://localhost:3000/${generatedShortUrl}`);
+      setShortUrl(`http://localhost:3000/api/${generatedShortUrl}`);
+      console.log(generatedShortUrl);
     } catch (err) {
+      console.log(err);
       setError(err.response?.data?.message || "Failed to create short URL");
     } finally {
       setIsLoading(false);
@@ -63,8 +62,6 @@ const UrlShortenerLanding = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-
-
       <div className="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
         <div className="w-full max-w-xl bg-white rounded-lg shadow-md p-6">
           <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">

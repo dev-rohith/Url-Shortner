@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "./authSlice";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
 
 const AuthForms = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -55,20 +55,14 @@ const AuthForms = () => {
       try {
         let response;
         if (isLogin) {
-          response = await axios.post(
-            "http://localhost:3000/api/login",
-            formData,
-            {
-              withCredentials: true,
-            }
+          response = await axiosInstance.post(
+            "/login",
+            formData
           );
         } else {
-          response = await axios.post(
-            "http://localhost:3000/api/register",
-            formData,
-            {
-              withCredentials: true,
-            }
+          response = await axiosInstance.post(
+            "/register",
+            formData
           );
         }
         const user = response.data.user;
