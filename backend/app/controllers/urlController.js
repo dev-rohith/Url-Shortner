@@ -29,7 +29,7 @@ urlCtrl.createSort = catchAsync(async (req, res, next) => {
 urlCtrl.accessUrl = catchAsync(async (req, res, next) => {
   const { sortUrl } = req.params;
   const userAgent = req.headers["user-agent"];
-  const ip = req.headers["x-forwarded-for"] || "130.245.32.202";
+  const ip = req.headers["x-forwarded-for"] || "43.247.156.26";
 
   if (!sortUrl) {
     return next(new AppError("Short URL is required", 400));

@@ -17,7 +17,7 @@ const urlSchema = new Schema(
       default: {},
       select: false,
     },
-    lastAccessedAt: { type: Date, default: Date.now, select: false },
+    lastAccessedAt: { type: Date, default: Date.now },
     urlExpiry: { type: Date, required: true },
     locations: {
      type: [

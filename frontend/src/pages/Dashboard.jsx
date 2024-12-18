@@ -1,13 +1,12 @@
 import {
-    User,
     LogOut,
     TvIcon,
+    UnfoldHorizontal,
   } from "lucide-react";
-  import { Link } from "react-router-dom";
+  import { Link, Outlet } from "react-router-dom";
   import { useDispatch } from "react-redux";
   import { logout } from "../pages/authSlice";
-import { MyUrls } from "../components";
-import UrlShortenerLanding from "./UrlShortenerLanding";
+
   
   const Dashboard = () => {
       const dispatch = useDispatch()
@@ -21,18 +20,18 @@ import UrlShortenerLanding from "./UrlShortenerLanding";
         <div className="container mx-auto">
           <nav className="bg-white shadow-md">
             <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-              <div
+              <Link
                 to="/"
                 className="flex items-center text-xl font-bold text-blue-600"
               >
                 <TvIcon className="mr-2" /> Dashbord
-              </div>
+              </Link>
               <div className="flex items-center space-x-4">
                 <Link
-                  to="/profile"
+                  to="/myurls"
                   className="flex items-center text-gray-700 hover:text-blue-600"
                 >
-                  <User className="mr-1" size={18} /> Profile
+                  <UnfoldHorizontal className="mr-1" size={18} /> My urls
                 </Link>
                 <button
                   onClick={handleLogout}
@@ -44,8 +43,7 @@ import UrlShortenerLanding from "./UrlShortenerLanding";
             </div>
           </nav>
 
-          <UrlShortenerLanding />
-          <MyUrls />
+          <Outlet />
   
         </div>
       </div>

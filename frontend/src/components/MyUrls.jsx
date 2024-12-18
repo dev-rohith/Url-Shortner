@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Edit2, Trash2, Eye, Copy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
 
 const MyUrls = () => {
   const [urls, setUrls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedUrl, setSelectedUrl] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
+  const [editValue, setEditvalue] = useState({sortUrl: ''})
 
-  // Fetch URLs on component mount
   useEffect(() => {
     const fetchUrls = async () => {
       try {
         setIsLoading(true);
-        // Replace with your actual API endpoint
-        const response = await axios.get("http://localhost:3000/api/myUrls", {
+        const response = await axiosInstance.get("/myUrls", {
           withCredentials: true,
         });
         console.log(response.data.urls);
@@ -30,14 +30,15 @@ const MyUrls = () => {
     fetchUrls();
   }, []);
 
-  console.log(error);
-  const navigate = useNavigate()
+  console.log(urls);
+  const navigate = useNavigate();
 
   const handleDeleteUrl = async (urlId) => {
+    console.log(urlId);
     try {
-      await axios.delete(`http://localhost:3000/api/urls/${urlId}`);
-      // Remove the deleted URL from the state
+      await axiosInstance.delete(`url/${urlId}`);
       setUrls(urls.filter((url) => url._id !== urlId));
+      setError("");
     } catch (err) {
       setError("Failed to delete URL");
       console.error(err);
@@ -45,7 +46,7 @@ const MyUrls = () => {
   };
 
   const handleCopyUrl = (shortUrl) => {
-    navigator.clipboard.writeText(`http://localhost:3000/${shortUrl}`);
+    navigator.clipboard.writeText(`http://localhost:3000/api/${shortUrl}`);
   };
 
   const handleViewDetails = (url) => {
@@ -117,7 +118,7 @@ const MyUrls = () => {
 
   const handleDetailsClick = (id) => {
     console.log(id);
-    navigate(`/details/${id}`)
+    navigate(`/details/${id}`);
   };
 
   if (isLoading) {
@@ -149,17 +150,10 @@ const MyUrls = () => {
     );
   }
 
-  // if (error) {
-  //   return (
-  //     <div className="text-red-500 text-center p-4">
-  //       {error}
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">My URLs</h1>
+      {error && <div className="text-red-500 text-center p-4">{error}</div>}
 
       {urls.length === 0 ? (
         <div className="text-center text-gray-500">No URLs created yet</div>
@@ -167,25 +161,29 @@ const MyUrls = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {urls.map((url) => (
             <div
-              onClick={() => {
-                handleDetailsClick(url._id);
-              }}
               key={url._id}
               className="hover:cursor-pointer bg-white rounded-lg shadow-md p-4 relative"
             >
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <p className="text-sm text-gray-600 truncate max-w-[200px]">
+                  <p
+                    onClick={() => {
+                      handleDetailsClick(url._id);
+                    }}
+                    className="text-sm text-gray-600 truncate max-w-[200px]"
+                  >
                     {url.longUrl}
                   </p>
-                  <a
-                    href={`http://localhost:3000/${url.sortUrl}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
-                  >
-                    {url.sortUrl}
-                  </a>
+                  { isEdit ? (<input className="border-2" value={url.sortUrl} onChange={(e)=>setEditvalue({...editValue, sortUrl:e.target.value})} />):(
+                    <a
+                      href={`http://localhost:3000/api/${url.sortUrl}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {url.sortUrl}
+                    </a>)
+                  }
                 </div>
                 <div className="flex space-x-2">
                   <button
@@ -213,6 +211,9 @@ const MyUrls = () => {
                   <button
                     className="text-blue-500 hover:text-blue-700"
                     title="Edit URL"
+                    onClick={() => {
+                      setIsEdit(!isEdit);
+                    }}
                   >
                     <Edit2 size={18} />
                   </button>

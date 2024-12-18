@@ -65,9 +65,7 @@ const AuthForms = () => {
             formData
           );
         }
-        const user = response.data.user;
-        console.log(user);
-        dispatch(login(user));
+        dispatch(login(response.data));
         navigate("/");
       } catch (err) {
         console.log(err);
