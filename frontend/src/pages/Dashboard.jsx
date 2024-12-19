@@ -1,11 +1,13 @@
 import {
+  LinkIcon,
     LogOut,
     TvIcon,
-    UnfoldHorizontal,
+    
   } from "lucide-react";
   import { Link, Outlet } from "react-router-dom";
   import { useDispatch } from "react-redux";
   import { logout } from "../pages/authSlice";
+import toast from "react-hot-toast";
 
   
   const Dashboard = () => {
@@ -13,6 +15,7 @@ import {
   
     function handleLogout() {
       dispatch(logout())
+      toast.success('loggedout')
     }
   
     return (
@@ -31,7 +34,7 @@ import {
                   to="/myurls"
                   className="flex items-center text-gray-700 hover:text-blue-600"
                 >
-                  <UnfoldHorizontal className="mr-1" size={18} /> My urls
+                  <LinkIcon className="mr-2" size={18} /> My urls
                 </Link>
                 <button
                   onClick={handleLogout}

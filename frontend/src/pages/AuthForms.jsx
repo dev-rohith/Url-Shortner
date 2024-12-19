@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { login } from "./authSlice";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
+import toast from "react-hot-toast";
 
 const AuthForms = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -66,9 +67,12 @@ const AuthForms = () => {
           );
         }
         dispatch(login(response.data));
+        toast.success("successfully loggedin")
         navigate("/");
       } catch (err) {
-        console.log(err);
+        console.log(err)
+        toast.error("invalid creadentials")
+        
       }
 
       setFormData({ username: "", email: "", password: "", input: "" });

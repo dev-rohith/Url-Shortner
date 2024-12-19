@@ -75,8 +75,11 @@ const URLDetailPage = () => {
         {/* HEADER SECTION */}
         <div className="px-6 py-4 bg-gray-100 flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-800">URL Statistics</h2>
-          <Link to="/myUrls" className="bg-blue-800 px-4 py-2 text-slate-50 font-medium rounded-lg">
-          &lt;- Back
+          <Link
+            to="/myUrls"
+            className="bg-blue-800 px-4 py-2 text-slate-50 font-medium rounded-lg"
+          >
+            &lt;- Back
           </Link>
         </div>
 

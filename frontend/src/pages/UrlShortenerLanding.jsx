@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Copy, Link } from "lucide-react";
 import axiosInstance from "../utils/axiosInstance";
+import toast from "react-hot-toast";
 
 const UrlShortenerLanding = () => {
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [copied, setCopied] = useState(false);
 
   const validateUrl = (url) => {
     const urlPattern = new RegExp(
@@ -25,7 +25,6 @@ const UrlShortenerLanding = () => {
   const handleCreateShortUrl = async () => {
     setShortUrl("");
     setError("");
-    setCopied(false);
 
     if (!longUrl) {
       setError("Please enter a URL");
@@ -45,10 +44,10 @@ const UrlShortenerLanding = () => {
 
       const generatedShortUrl = response.data.data.sortUrl;
       setShortUrl(`http://localhost:3000/api/${generatedShortUrl}`);
-      console.log(generatedShortUrl);
+      toast.success("successfully generated");
     } catch (err) {
-      console.log(err);
       setError(err.response?.data?.message || "Failed to create short URL");
+      toast.error("error while shorting url");
     } finally {
       setIsLoading(false);
     }
@@ -56,8 +55,7 @@ const UrlShortenerLanding = () => {
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(shortUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+   toast.success('copied successfully')
   };
 
   return (
@@ -123,14 +121,7 @@ const UrlShortenerLanding = () => {
                 readOnly
                 className="flex-grow bg-transparent focus:outline-none"
               />
-              <button
-                onClick={handleCopyUrl}
-                className={`ml-2 ${
-                  copied
-                    ? "text-green-600"
-                    : "text-gray-600 hover:text-blue-600"
-                }`}
-              >
+              <button onClick={handleCopyUrl} className={"ml-2 text-green-600"}>
                 <Copy size={20} />
               </button>
             </div>
