@@ -1,15 +1,15 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./pages/AuthForms";
 
 import { MyUrls, ProtectedRoute, URLDetails } from "./components";
 import Dashboard from "./pages/Dashboard";
 import UrlShortenerLanding from "./pages/UrlShortenerLanding";
+import AuthForm from "./pages/auth/AuthForms";
 
 
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />,
+    element: <AuthForm />,
   },
   {
     element: <ProtectedRoute />,

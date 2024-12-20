@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "./authSlice";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../utils/axiosInstance";
 import toast from "react-hot-toast";
+import { handleLogin, handleRegister } from "./authHandle";
 
-const AuthForms = () => {
+const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: "",
@@ -14,14 +13,14 @@ const AuthForms = () => {
     input: "",
   });
   const [errors, setErrors] = useState({});
-
+  
+  const navigate = useNavigate()
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
+
 
   const validate = (values) => {
     const errors = {};
-
     if (isLogin) {
       if (!values.input) errors.input = "Username or email is required";
       if (!values.password) errors.password = "Password is required";
@@ -41,44 +40,33 @@ const AuthForms = () => {
     return errors;
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate(formData);
     if (Object.keys(validationErrors).length === 0) {
       try {
-        let response;
         if (isLogin) {
-          response = await axiosInstance.post(
-            "/login",
-            formData
-          );
+          dispatch(handleLogin(formData, navigate));
         } else {
-          response = await axiosInstance.post(
-            "/register",
-            formData
-          );
-        }
-        dispatch(login(response.data));
-        toast.success("successfully loggedin")
-        navigate("/");
+          dispatch(handleRegister(formData));
+        }   
       } catch (err) {
-        console.log(err)
-        toast.error("invalid creadentials")
-        
+        console.log(err);
+        toast.error("invalid creadentials");
       }
-
       setFormData({ username: "", email: "", password: "", input: "" });
       setErrors({});
     } else {
       setErrors(validationErrors);
+    }
+  };
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -100,9 +88,7 @@ const AuthForms = () => {
                 placeholder="Username or Email"
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              {errors.input && (
-                <p className="text-red-500 text-sm mt-1">{errors.input}</p>
-              )}
+              
             </div>
           ) : (
             <>
@@ -119,7 +105,6 @@ const AuthForms = () => {
                   <p className="text-red-500 text-sm mt-1">{errors.username}</p>
                 )}
               </div>
-
               <div>
                 <input
                   type="email"
@@ -177,4 +162,4 @@ const AuthForms = () => {
   );
 };
 
-export default AuthForms;
+export default AuthForm;

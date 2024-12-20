@@ -1,12 +1,12 @@
 import Chart from "react-google-charts";
 
 
-const Maps = ({countryData}) => {
+const CountryMap = ({countryData}) => {
   return (
     <div className="bg-white shadow rounded-lg p-4 w-full">
       <h3 className="text-center font-semibold mb-4"></h3>
 
-      {/* COUNTRY MAPS */}
+      {/* COUNTRY CountryMap */}
       <Chart
         chartEvents={[
           {
@@ -26,4 +26,4 @@ const Maps = ({countryData}) => {
     </div>
   );
 };
-export default Maps;
+export default CountryMap;

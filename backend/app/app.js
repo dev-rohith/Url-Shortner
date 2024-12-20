@@ -18,6 +18,7 @@ process.on("uncaughtException", (err) => {
 const app = express();
 
 const logStream = fs.createWriteStream("./access.logs");
+
 const corsOptions = {
   origin: "http://localhost:5173",
   credentials: true,

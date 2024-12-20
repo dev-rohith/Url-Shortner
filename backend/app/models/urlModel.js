@@ -19,6 +19,10 @@ const urlSchema = new Schema(
     },
     lastAccessedAt: { type: Date, default: Date.now },
     urlExpiry: { type: Date, required: true },
+    totalClicks: {
+      type: Number,
+      default: 0
+    },
     locations: {
      type: [
       {

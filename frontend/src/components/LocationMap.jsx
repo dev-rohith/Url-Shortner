@@ -16,7 +16,7 @@ const defaultIcon = new Icon({
   iconAnchor: [12, 41]
 });
 
-const MapLocations = ({ AccessLocations = [] }) => {
+const LocationMap = ({ AccessLocations = [] }) => {
   const defaultCenter = [51.505, -0.09];
 
   return (
@@ -47,4 +47,4 @@ const MapLocations = ({ AccessLocations = [] }) => {
   );
 };
 
-export default MapLocations;
+export default LocationMap;

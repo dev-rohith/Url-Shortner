@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react";
-import { Edit2, Trash2, Eye, Copy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../utils/axiosInstance";
-import {format} from 'date-fns'
+import { Trash2, Eye, Copy } from "lucide-react";
 import toast from "react-hot-toast";
+
+import axiosInstance from "../utils/axiosInstance";
+import Spinner from "./Spinner";
 
 const MyUrls = () => {
   const [urls, setUrls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedUrl, setSelectedUrl] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [editForm, setEditForm] = useState({ sortUrl: "" });
 
   useEffect(() => {
     const fetchUrls = async () => {
@@ -38,17 +37,16 @@ const MyUrls = () => {
       await axiosInstance.delete(`url/${urlId}`);
       setUrls(urls.filter((url) => url._id !== urlId));
       setError("");
-      toast.success('deleted successfully')
+      toast.success("deleted successfully");
     } catch (err) {
       setError("Failed to delete URL");
       console.error(err);
     }
   };
 
-
   const handleCopyUrl = (shortUrl) => {
     navigator.clipboard.writeText(`http://localhost:3000/api/${shortUrl}`);
-    toast.success('copied succssfully')
+    toast.success("copied succssfully");
   };
 
   const handleViewDetails = (url) => {
@@ -64,27 +62,16 @@ const MyUrls = () => {
     navigate(`/details/${id}`);
   };
 
-  function handleEdit(id) {
-    const editUrl = urls.find((url) => url._id === id);
-    setEditForm(editUrl);
+  {
+    /*LOADING*/
+  }
+  if (isLoading) {
+    return <Spinner />;
   }
 
-  async function handleEditSubmit(event) {
-    event.preventDefault();
-    try{
-    const response = await axiosInstance.put(`/url/${editForm._id}`, editForm)
-    const editedUrl = response.data.data
-    const updatedUrls = urls.map((url)=> editedUrl._id === url._id ? editedUrl : url)
-    setUrls(updatedUrls)
-    setIsEdit(false)
-    toast.success('edited successfully')
-    }catch(error){
-      console.log(error.message)
-      toast.error('url is already taken')
-    }
+  {
+    /*MODEL WINDOW*/
   }
-
-     {/*MODEL WINDOW*/}
   const renderUrlDetailsModal = () => {
     if (!selectedUrl) return null;
     return (
@@ -143,36 +130,6 @@ const MyUrls = () => {
     );
   };
 
-     {/*LOADING*/}
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="12" y1="2" x2="12" y2="6"></line>
-            <line x1="12" y1="18" x2="12" y2="22"></line>
-            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-            <line x1="2" y1="12" x2="6" y2="12"></line>
-            <line x1="18" y1="12" x2="22" y2="12"></line>
-            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
-            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
-          </svg>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">My URLs</h1>
@@ -197,24 +154,15 @@ const MyUrls = () => {
                   >
                     {url.longUrl}
                   </p>
-                  {isEdit ? (
-                    <input
-                      className="border-2"
-                      value={editForm.sortUrl}
-                      onChange={(e) =>
-                        setEditForm({ ...editForm, sortUrl: e.target.value })
-                      }
-                    />
-                  ) : (
-                    <a
-                      href={`http://localhost:3000/api/${url.sortUrl}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      {url.sortUrl}
-                    </a>
-                  )}
+
+                  <a
+                    href={`http://localhost:3000/api/${url.sortUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {url.sortUrl}
+                  </a>
                 </div>
                 <div className="flex space-x-2">
                   <button
@@ -235,34 +183,11 @@ const MyUrls = () => {
               </div>
 
               <div className="mt-2 flex justify-between items-center border-t pt-2">
-                {isEdit ? (
-                  <input type="date" className="text-sm text-gray-500"
-                   value={format(editForm.urlExpiry, 'yyyy-MM-dd')}
-                  />
-                ) : (
-                  <span className="text-sm text-gray-500">
-                    Expire: {new Date(url.urlExpiry).toLocaleDateString()}
-                  </span>
-                )}
+                <span className="text-sm text-gray-500">
+                  Expire: {new Date(url.urlExpiry).toLocaleDateString()}
+                </span>
+
                 <div className="flex space-x-2">
-                  {isEdit && (
-                    <button
-                      className="text-blue-500 hover:text-blue-700 bg-"
-                      onClick={handleEditSubmit}
-                    >
-                      save
-                    </button>
-                  )}
-                  <button
-                    className="text-blue-500 hover:text-blue-700"
-                    title="Edit URL"
-                    onClick={() => {
-                      setIsEdit(!isEdit);
-                      handleEdit(url._id);
-                    }}
-                  >
-                    <Edit2 size={18} />
-                  </button>
                   <button
                     onClick={() => handleDeleteUrl(url._id)}
                     className="text-red-500 hover:text-red-700"
@@ -277,7 +202,6 @@ const MyUrls = () => {
         </div>
       )}
 
-     
       {renderUrlDetailsModal()}
     </div>
   );

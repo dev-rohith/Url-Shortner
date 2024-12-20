@@ -61,7 +61,7 @@ urlCtrl.accessUrl = catchAsync(async (req, res, next) => {
     return next(new AppError("URL not found", 404));
   }
 
-  console.log(userInfo);
+  url.totalClicks += 1;
 
   url.country.set(
     userInfo.country,
@@ -90,7 +90,7 @@ urlCtrl.getUrl = catchAsync(async (req, res, next) => {
     "+device +country +lastAccessedAt"
   );
   if (!url) {
-   return next(new AppError("url is not found", 404 ));
+    return next(new AppError("url is not found", 404));
   }
   res.json({ data: url });
 });
@@ -108,7 +108,9 @@ urlCtrl.editUrl = catchAsync(async (req, res, next) => {
   if (alreadyExist) {
     return next(new AppError("url is already exist try somethig unique", 400));
   }
-  const updatedUrl = await Url.findByIdAndUpdate(id, req.body, { new: true });
+  const updatedUrl = await Url.findByIdAndUpdate(id, req.body, {
+    new: true,
+  }).select("+device +country +lastAccessedAt");
   if (!updatedUrl) {
     return next(new AppError("invalid id or url not found", 400));
   }
