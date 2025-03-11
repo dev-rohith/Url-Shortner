@@ -1,17 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-  Legend,
-} from "recharts";
 import { Link2, Calendar, Globe, Edit, Save } from "lucide-react";
 import { format } from "date-fns";
 
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../api/axiosInstance";
 import toast from "react-hot-toast";
 
 import CountryMap from "./CountryMap";
@@ -42,7 +34,7 @@ const URLDetailPage = () => {
     };
 
     fetchURLData();
-  }, []);
+  }, [id]);
 
   async function handleEditData() {
     try {
@@ -54,7 +46,7 @@ const URLDetailPage = () => {
     }
   }
 
-  //  DATA FORMATING
+  //  data formating 
   const deviceData = urlData
     ? Object.entries(urlData.device || {}).map(([name, value]) => ({
         name,
@@ -80,7 +72,6 @@ const URLDetailPage = () => {
   return (
     <div className="container mx-auto p-4 bg-gray-50 min-h-screen">
       <div className="bg-white shadow-lg rounded-xl overflow-hidden max-w-6xl mx-auto">
-        {/* HEAD SECTION */}
         <div className="px-6 py-4 bg-gray-100 flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-800">URL Statistics</h2>
           <Link
@@ -91,7 +82,7 @@ const URLDetailPage = () => {
           </Link>
         </div>
 
-        {/* URL INFORMATION */}
+        {/* url information */}
         <div className="p-6 grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <button
@@ -145,21 +136,21 @@ const URLDetailPage = () => {
             </div>
           </div>
 
-          {/* PIE CHART */}
+          {/* pie chart */}
           <DeviceChart deviceData={deviceData} />
         </div>
 
-        {/* MAPS SECTION */}
+        {/* maps */}
         <div className="p-6 grid md:grid-cols-2 gap-4">
           <div className="bg-white shadow rounded-lg p-4">
             <h3 className="text-center font-semibold mb-4">Access Locations</h3>
-            {/* ACCESS LOCATIONS */}
+            {/* url access locations */}
             <LocationMap AccessLocations={urlData.locations} />
           </div>
 
           <div className="bg-white shadow rounded-lg p-4">
             <h3 className="text-center font-semibold mb-4">Users Locations</h3>
-            {/* COUNTRY MAP */}
+            {/* country map */}
             <CountryMap countryData={countryData} />
           </div>
         </div>

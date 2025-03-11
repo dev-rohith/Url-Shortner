@@ -6,7 +6,7 @@ const CountryMap = ({countryData}) => {
     <div className="bg-white shadow rounded-lg p-4 w-full">
       <h3 className="text-center font-semibold mb-4"></h3>
 
-      {/* COUNTRY CountryMap */}
+      {/* Country Map */}
       <Chart
         chartEvents={[
           {

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Trash2, Eye, Copy } from "lucide-react";
 import toast from "react-hot-toast";
 
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../api/axiosInstance";
 import Spinner from "./Spinner";
 
 const MyUrls = () => {
@@ -45,7 +45,7 @@ const MyUrls = () => {
   };
 
   const handleCopyUrl = (shortUrl) => {
-    navigator.clipboard.writeText(`http://localhost:3000/api/${shortUrl}`);
+    navigator.clipboard.writeText(`${import.meta.env.VITE_BACKEND_URL}/${shortUrl}`);
     toast.success("copied succssfully");
   };
 
@@ -62,16 +62,10 @@ const MyUrls = () => {
     navigate(`/details/${id}`);
   };
 
-  {
-    /*LOADING*/
-  }
   if (isLoading) {
     return <Spinner />;
   }
 
-  {
-    /*MODEL WINDOW*/
-  }
   const renderUrlDetailsModal = () => {
     if (!selectedUrl) return null;
     return (
@@ -86,15 +80,15 @@ const MyUrls = () => {
             <p>
               <strong>Short URL:</strong>
               <span className="text-blue-600">
-                http://localhost:3000/{selectedUrl.sortUrl}
+                {`${import.meta.env.VITE_BACKEND_URL}/${selectedUrl.sortUrl}`}
               </span>
             </p>
             <p>
-              <strong>Created At:</strong>{" "}
+              <strong>Created At:</strong>
               {new Date(selectedUrl.createdAt).toLocaleString()}
             </p>
             <p>
-              <strong>Expiry:</strong>{" "}
+              <strong>Expiry:</strong>
               {new Date(selectedUrl.urlExpiry).toLocaleString()}
             </p>
 
@@ -156,7 +150,7 @@ const MyUrls = () => {
                   </p>
 
                   <a
-                    href={`http://localhost:3000/api/${url.sortUrl}`}
+                    href={`${import.meta.env.VITE_BACKEND_URL}api/${url.sortUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline"

@@ -22,7 +22,7 @@ const Dashboard = () => {
               to="/"
               className="flex items-center text-xl font-bold text-blue-600"
             >
-              <TvIcon className="mr-2" /> Dashbord
+              <TvIcon className="mr-2" /> Smart Link
             </Link>
             <div className="flex items-center space-x-4">
               <Link

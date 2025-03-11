@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import { handleLogin, handleRegister } from "./authHandle";
+import { Loader } from "lucide-react";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,6 +12,7 @@ const AuthForm = () => {
     password: "",
     input: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   
   const navigate = useNavigate()
@@ -45,18 +46,16 @@ const AuthForm = () => {
     e.preventDefault();
     const validationErrors = validate(formData);
     if (Object.keys(validationErrors).length === 0) {
-      try {
+     setIsLoading(true);
         if (isLogin) {
-          dispatch(handleLogin(formData, navigate));
+         await dispatch(handleLogin(formData, navigate));
         } else {
-          dispatch(handleRegister(formData));
+          await dispatch(handleRegister(formData));
         }   
-      } catch (err) {
-        console.log(err);
-        toast.error("invalid creadentials");
-      }
+      
       setFormData({ username: "", email: "", password: "", input: "" });
       setErrors({});
+      setIsLoading(false);
     } else {
       setErrors(validationErrors);
     }
@@ -76,7 +75,6 @@ const AuthForm = () => {
         <h2 className="text-center text-2xl font-bold mb-6">
           {isLogin ? "Sign In" : "Create Account"}
         </h2>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           {isLogin ? (
             <div>
@@ -137,9 +135,9 @@ const AuthForm = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors"
+            className="w-full flex items-center justify-center bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors"
           >
-            {isLogin ? "Sign In" : "Sign Up"}
+            {isLoading && <Loader className="h-6 w-6 animate-spin"/>}{isLogin ? "Sign In" : "Sign Up"}
           </button>
         </form>
 

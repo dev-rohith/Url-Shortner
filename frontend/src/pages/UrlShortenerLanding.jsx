@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Copy, Link } from "lucide-react";
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../api/axiosInstance";
 import toast from "react-hot-toast";
 
 const UrlShortenerLanding = () => {

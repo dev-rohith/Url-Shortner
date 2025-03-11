@@ -81,7 +81,7 @@ urlCtrl.accessUrl = catchAsync(async (req, res, next) => {
 
   await url.save({ validateBeforeSave: false, timestamps: false });
 
-  res.redirect(url.longUrl);
+  res.redirect(`https://${url.longUrl}`);  //ensuring front end is secure to redirect correctly
 });
 
 urlCtrl.getUrl = catchAsync(async (req, res, next) => {

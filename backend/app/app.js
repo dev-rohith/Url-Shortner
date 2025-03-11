@@ -7,6 +7,9 @@ import urlRoutes from "./routes/urlRoutes.js";
 import fs from "fs";
 import morgan from "morgan";
 import errorHandler from "./middleware/errorHandler.js";
+import { configDotenv } from "dotenv";
+
+configDotenv();
 
 process.on("uncaughtException", (err) => {
   console.log("unhandled Exception");
@@ -19,8 +22,10 @@ const app = express();
 
 const logStream = fs.createWriteStream("./access.logs");
 
+console.log(process.env.FRONT_END_URL);
+
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.FRONT_END_URL,
   credentials: true,
 };
 
