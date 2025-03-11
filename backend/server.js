@@ -1,8 +1,8 @@
 import app from "./app/app.js";
 import { configDotenv } from "dotenv";
-import dbconnnection from './app/utils/db.connection.js'
-configDotenv()
+import dbconnnection from './app/utils/db.connection.js';
 
+configDotenv()
 
 dbconnnection()
 

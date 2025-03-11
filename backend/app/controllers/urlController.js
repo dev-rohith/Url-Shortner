@@ -29,7 +29,8 @@ urlCtrl.createSort = catchAsync(async (req, res, next) => {
 urlCtrl.accessUrl = catchAsync(async (req, res, next) => {
   const { sortUrl } = req.params;
   const userAgent = req.headers["user-agent"];
-  const ip = req.headers["x-forwarded-for"] || "43.247.156.26";
+  //making sure we getting ip or else redirection wont work
+  const ip = req.headers["x-forwarded-for"] || req.ip || req.connection.remoteAddress;
 
   if (!sortUrl) {
     return next(new AppError("Short URL is required", 400));
@@ -62,9 +63,9 @@ urlCtrl.accessUrl = catchAsync(async (req, res, next) => {
   }
 
   url.totalClicks += 1;
-
+           //set is more convenient for dealing with this senarios than array for updating
   url.country.set(
-    userInfo.country,
+    userInfo.country,    
     (url.country.get(userInfo.country) || 0) + 1
   );
   url.device.set(

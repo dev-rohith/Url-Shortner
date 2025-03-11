@@ -1,5 +1,0 @@
-
-
-const userCtrl = {}
-
-userCtrl.getUser
