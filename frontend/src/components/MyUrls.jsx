@@ -150,7 +150,7 @@ const MyUrls = () => {
                   </p>
 
                   <a
-                    href={`${import.meta.env.VITE_BACKEND_URL}api/${url.sortUrl}`}
+                    href={`${import.meta.env.VITE_BACKEND_URL}/${url.sortUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline"
