@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { configDotenv } from "dotenv";
 configDotenv();
 
-const DB_URI =  process.env.MONGO_URL?.replace('<dbname>',process.env.MONGO_PASSWORD) || "mongodb://127.0.0.1:27017/urlshoortner"
+const DB_URI =  process.env.MONGO_URL?.replace('<db_password>',process.env.MONGO_PASSWORD) || "mongodb://127.0.0.1:27017/urlshoortner"
 
 const dbConnection = async (d) => {
   try {
