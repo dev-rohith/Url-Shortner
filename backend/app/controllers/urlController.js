@@ -29,17 +29,18 @@ urlCtrl.createSort = catchAsync(async (req, res, next) => {
 urlCtrl.accessUrl = catchAsync(async (req, res, next) => {
   const { sortUrl } = req.params;
   const userAgent = req.headers["user-agent"];
-  //making sure we getting ip or else redirection wont work
-  const ip = req.headers["x-forwarded-for"] || req.ip || req.connection.remoteAddress;
+
+  //making sure we getting ip or else redirection wont work x forward returns multiple ip's with including proxy
+  const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.ip || req.connection.remoteAddress;
+
+  console.log("Client IP:", ip);
 
   if (!sortUrl) {
     return next(new AppError("Short URL is required", 400));
   }
 
   const accessKey = process.env.API_ACCESS_TOKEN;
-  console.log(accessKey);
-  console.log(ip);
-  console.log(userAgent);
+
   const apiUrl = `https://apiip.net/api/check?ip=${ip}&accessKey=${accessKey}`;
 
   const userInfo = {};
@@ -66,9 +67,9 @@ urlCtrl.accessUrl = catchAsync(async (req, res, next) => {
   }
 
   url.totalClicks += 1;
-           //set is more convenient for dealing with this senarios than array for updating
+  //set is more convenient for dealing with this senarios than array for updating
   url.country.set(
-    userInfo.country,    
+    userInfo.country,
     (url.country.get(userInfo.country) || 0) + 1
   );
   url.device.set(
@@ -85,7 +86,7 @@ urlCtrl.accessUrl = catchAsync(async (req, res, next) => {
 
   await url.save({ validateBeforeSave: false, timestamps: false });
 
-  res.redirect(`https://${url.longUrl}`);  //ensuring front end is secure to redirect correctly
+  res.redirect(`https://${url.longUrl}`); //ensuring front end is secure to redirect correctly
 });
 
 urlCtrl.getUrl = catchAsync(async (req, res, next) => {
