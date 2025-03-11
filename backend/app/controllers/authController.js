@@ -14,10 +14,13 @@ const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
 
   res.cookie("jwt", token, {
+    httpOnly: true, 
+    secure: true, 
+    sameSite: "None", 
+    path: "/", 
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true,
     
   });
 
@@ -26,8 +29,7 @@ const createSendToken = (user, statusCode, req, res) => {
 
   res.status(statusCode).json({
     status: "success",
-    token,
-    user
+    token
   });
 };
 

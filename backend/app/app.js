@@ -37,9 +37,9 @@ app.use(morgan("combined", { stream: logStream }));
 app.use(express.json());
 
 //routing
-app.use("/api/", userRoutes);
+app.use("/api/url/", userRoutes);
 
-app.use("/api/", urlRoutes);
+app.use("/api/url/", urlRoutes);
 
 app.use(errorHandler);
 
