@@ -43,7 +43,7 @@ const UrlShortenerLanding = () => {
       });
 
       const generatedShortUrl = response.data.data.sortUrl;
-      setShortUrl(`http://localhost:3000/api/${generatedShortUrl}`);
+      setShortUrl(`${import.meta.env.VITE_BACKEND_URL}/${generatedShortUrl}`);
       toast.success("successfully generated");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create short URL");
