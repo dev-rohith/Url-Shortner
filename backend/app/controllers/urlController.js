@@ -37,6 +37,9 @@ urlCtrl.accessUrl = catchAsync(async (req, res, next) => {
   }
 
   const accessKey = process.env.API_ACCESS_TOKEN;
+  console.log(accessKey);
+  console.log(ip);
+  console.log(userAgent);
   const apiUrl = `https://apiip.net/api/check?ip=${ip}&accessKey=${accessKey}`;
 
   const userInfo = {};
